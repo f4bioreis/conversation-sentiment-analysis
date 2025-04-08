@@ -7,7 +7,13 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__RecordPage">
-            <property name="mode" type="String" label="Mode" datasource="After Customer's Response,On Button Click,End of Conversation" description="Select the display mode"/>
+            <property
+            name="mode"
+            type="String"
+            label="Mode"
+            datasource="After Customer's Response,On Button Click,End of Conversation"
+            default="After Customer's Response"
+            description="Select the display mode"/>
             <objects>
                 <object>MessagingSession</object>
                 <object>Case</object>

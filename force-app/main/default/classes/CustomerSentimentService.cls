@@ -4,20 +4,23 @@ public class CustomerSentimentService {
         if (messagingSessionId.getSobjectType() != Schema.MessagingSession.SObjectType) {
             throw new InvalidIdException('The provided ID is not a MessagingSession ID');
         }
-
-        MessagingSession messagingSession = new messagingSession();
-        messagingSession.Id = messagingSessionId;
         
-        ConnectApi.WrappedValue sessionIdWrapper = new ConnectApi.WrappedValue();
-        sessionIdWrapper.value = messagingSession;
+        ConnectApi.WrappedValue messagingSessionContainer = new ConnectApi.WrappedValue();
+        messagingSessionContainer.value = new Map<String, String>{
+            'Id' => messagingSessionId
+        };
 
         ConnectApi.EinsteinPromptTemplateGenerationsInput templateInput = new ConnectApi.EinsteinPromptTemplateGenerationsInput();
+        templateInput.isPreview = false;
         templateInput.inputParams = new Map<String, ConnectApi.WrappedValue>();
-        templateInput.inputParams.put('messagingSessionId', sessionIdWrapper);
+        templateInput.inputParams.put('Input:Messaging_Session', messagingSessionContainer);
+
+        templateInput.additionalConfig = new ConnectApi.EinsteinLlmAdditionalConfigInput();
+        templateInput.additionalConfig.applicationName = 'PromptTemplateGenerationsInvocable';
 
         ConnectApi.EinsteinPromptTemplateGenerationsRepresentation templateResponse =
-            ConnectAPI.EinsteinLlm.generateMessagesForPromptTemplate(
-                'Customer_Sentiment_Analyzer',
+            ConnectAPI.EinsteinLLM.generateMessagesForPromptTemplate(
+                'Conversation_Sentiment_Analyzer',
                 templateInput
             );
         
@@ -27,13 +30,10 @@ public class CustomerSentimentService {
         }
         
         return customerSentiment;
-
     }
 
     private List<String> customerSentiments = new List<String>{
-        'Positive',
-        'Neutral',
-        'Negative'
+        'Positive', 'Neutral', 'Negative'
     };
 
     public class InvalidIdException extends Exception {}

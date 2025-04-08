@@ -1,7 +1,7 @@
 <template>
     <lightning-card title="Customer Sentiment" icon-name="custom:custom97">
         <div class="slds-p-vertical_x-small slds-p-horizontal_medium">
-            <span class="slds-badge slds-p-horizontal_small slds-align-middle slds-theme_success">
+            <span class={sentimentClasses}>
                 <lightning-icon
                     icon-name={sentimentIcon}
                     alternative-text="Positive"
@@ -9,7 +9,7 @@
                     variant="inverse"
                     class="slds-icon slds-icon_xx-small slds-m-right_xx-small">
                 </lightning-icon>
-                <span class="slds-badge__label">Positive</span>
+                <span class="slds-badge__label">{customerSentiment}</span>
             </span>
         </div>
         <template lwc:if={isRefreshButtonVisible}>
