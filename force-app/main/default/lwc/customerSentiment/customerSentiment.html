@@ -1,0 +1,22 @@
+<template>
+    <lightning-card title="Customer Sentiment" icon-name="custom:custom97">
+        <div class="slds-p-vertical_x-small slds-p-horizontal_medium">
+            <span class="slds-badge slds-p-horizontal_small slds-align-middle slds-theme_success">
+                <lightning-icon
+                    icon-name={sentimentIcon}
+                    alternative-text="Positive"
+                    size="xx-small"
+                    variant="inverse"
+                    class="slds-icon slds-icon_xx-small slds-m-right_xx-small">
+                </lightning-icon>
+                <span class="slds-badge__label">Positive</span>
+            </span>
+        </div>
+        <template lwc:if={isRefreshButtonVisible}>
+            <div slot="footer">
+                <lightning-button variant="brand" label="Refresh" title="Refresh" onclick={refreshSentiment}>
+                </lightning-button>
+            </div>
+        </template>
+    </lightning-card>
+</template>
