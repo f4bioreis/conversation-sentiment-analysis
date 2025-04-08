@@ -11,12 +11,12 @@
             name="mode"
             type="String"
             label="Mode"
-            datasource="After Customer's Response,On Button Click,End of Conversation"
-            default="After Customer's Response"
-            description="Select the display mode"/>
+            datasource="After Every Message,On Button Click,End of Conversation"
+            default="After Every Message"
+            placeholder="When the sentiment calculation will occur"
+            description="When the sentiment calculation will occur"/>
             <objects>
                 <object>MessagingSession</object>
-                <object>Case</object>
             </objects>
         </targetConfig>
     </targetConfigs>

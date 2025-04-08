@@ -1,30 +1,14 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import getCustomerSentiment from '@salesforce/apex/CustomerSentimentController.getCustomerSentiment';
-import { subscribe, APPLICATION_SCOPE, MessageContext } from 'lightning/messageService';
+import { subscribe, MessageContext, APPLICATION_SCOPE } from 'lightning/messageService';
 import ConversationAgentSendChannel from '@salesforce/messageChannel/lightning__conversationAgentSend';
 import ConversationEndUserChannel from '@salesforce/messageChannel/lightning__conversationEndUserMessage';
 import ConversationEndedChannel from '@salesforce/messageChannel/lightning__conversationEnded';
-import Longitude from '@salesforce/schema/Asset.Longitude';
-
-const SENTIMENTS = {
-    Positive: {
-        icon: 'utility:smiley_and_people',
-        class: 'slds-theme_success'
-    },
-    Neutral: {
-        icon: 'utility:sentiment_neutral',
-        class: 'slds-theme_warning'
-    },
-    Negative: {
-        icon: 'utility:sentiment_negative',
-        class: 'slds-theme_error'
-    }
-};
 
 export default class CustomerSentiment extends LightningElement {
 
     @api recordId = '';
-    @api mode = 'After Customer\'s Response';
+    @api mode = MODE_EVERY_MESSAGE;
     @track customerSentiment = 'Positive';
     isLoading = false;
 
@@ -34,29 +18,27 @@ export default class CustomerSentiment extends LightningElement {
     connectedCallback() {
         this.fetchCustomerSentiment();
         
-        if (this.mode === 'After Customer\'s Response') {
+        if (this.mode === MODE_EVERY_MESSAGE) {
             this.subscribeToAgentMessageChannel();
             this.subscribeToEndUserMessageChannel();
         }
-        else if (this.mode === 'End of Conversation') {
+        else if (this.mode === MODE_END_CONV) {
             this.subscribeToConversationEndChannel();
         }
     }
 
     get sentimentIcon() {
-        console.log('sentimentIcon:', SENTIMENTS[this.customerSentiment].icon ?? '');
         return SENTIMENTS[this.customerSentiment].icon ?? '';
     }
 
     get sentimentClasses() {
         let sentimentClasses = 'slds-badge slds-p-horizontal_small slds-align-middle ';
         sentimentClasses += SENTIMENTS[this.customerSentiment].class ?? '';
-        console.log('sentimentClasses:', sentimentClasses);
         return sentimentClasses;
     }
 
     get isRefreshButtonVisible() {
-        return this.mode === 'On Button Click';
+        return this.mode === MODE_BUTTON_CLICK;
     }
 
     subscribeToAgentMessageChannel() {
@@ -77,7 +59,7 @@ export default class CustomerSentiment extends LightningElement {
         );
     }
 
-    subcribeToConversationEndChannel() {
+    subscribeToConversationEndChannel() {
         subscribe(
             this.messageContext,
             ConversationEndedChannel,
@@ -98,7 +80,6 @@ export default class CustomerSentiment extends LightningElement {
         .then(result => {
             this.customerSentiment = result;
             console.log('Customer Sentiment:', this.customerSentiment);
-            
         })
         .catch(error => {
             console.error('Unable to fetch customer sentiment. Details:', error);
@@ -121,3 +102,22 @@ export default class CustomerSentiment extends LightningElement {
         this.isLoading = false;
     }
 }
+
+const SENTIMENTS = {
+    Positive: {
+        icon: 'utility:smiley_and_people',
+        class: 'slds-theme_success'
+    },
+    Neutral: {
+        icon: 'utility:sentiment_neutral',
+        class: 'slds-theme_warning'
+    },
+    Negative: {
+        icon: 'utility:sentiment_negative',
+        class: 'slds-theme_error'
+    }
+};
+
+const MODE_EVERY_MESSAGE = 'After Every Message';
+const MODE_BUTTON_CLICK = 'On Button Click';
+const MODE_END_CONV = 'End of Conversation';

@@ -1,5 +1,9 @@
 <template>
     <lightning-card title="Customer Sentiment" icon-name="custom:custom97">
+        <template lwc:if={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium" variant="brand">
+            </lightning-spinner>
+        </template>
         <div class="slds-p-vertical_x-small slds-p-horizontal_medium">
             <span class={sentimentClasses}>
                 <lightning-icon
@@ -14,7 +18,12 @@
         </div>
         <template lwc:if={isRefreshButtonVisible}>
             <div slot="footer">
-                <lightning-button variant="brand" label="Refresh" title="Refresh" onclick={refreshSentiment}>
+                <lightning-button
+                    variant="brand"
+                    label="Refresh"
+                    title="Refresh"
+                    disabled={isLoading}
+                    onclick={refreshSentiment}>
                 </lightning-button>
             </div>
         </template>
