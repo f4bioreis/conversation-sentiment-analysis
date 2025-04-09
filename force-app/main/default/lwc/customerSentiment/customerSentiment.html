@@ -1,29 +1,40 @@
 <template>
-    <lightning-card title="Customer Sentiment" icon-name="custom:custom97">
+    <lightning-card title={labels.cardTitle} icon-name="custom:custom97">
         <template lwc:if={isLoading}>
             <lightning-spinner alternative-text="Loading" size="medium" variant="brand">
             </lightning-spinner>
         </template>
         <div class="slds-p-vertical_x-small slds-p-horizontal_medium">
-            <span class={sentimentClasses}>
-                <lightning-icon
-                    icon-name={sentimentIcon}
-                    alternative-text="Positive"
-                    size="xx-small"
-                    variant="inverse"
-                    class="slds-icon slds-icon_xx-small slds-m-right_xx-small">
-                </lightning-icon>
-                <span class="slds-badge__label">{customerSentiment}</span>
-            </span>
+            <template lwc:if={isErrorState}>
+                <span class="slds-text-color_error">
+                    {labels.friendlyErrorMessage}
+                </span>
+            </template>
+            <template lwc:elseif={isEmptyState}>
+                <span lwc:if={isModeAnalyzeButton}>{labels.analyzeBtnEmptyStateMessage}</span>
+                <span lwc:if={isModeConvEnd}>{labels.convEndModeEmptyStateMessage}</span>
+            </template>
+            <template lwc:else>
+                <span class={sentimentClasses}>
+                    <lightning-icon
+                        icon-name={sentimentIcon}
+                        alternative-text={customerSentimentDisplay}
+                        size="xx-small"
+                        variant="inverse"
+                        class="slds-icon slds-icon_xx-small slds-m-right_xx-small">
+                    </lightning-icon>
+                    <span class="slds-badge__label">{customerSentimentDisplay}</span>
+                </span>
+            </template>
         </div>
-        <template lwc:if={isRefreshButtonVisible}>
+        <template lwc:if={isModeAnalyzeButton}>
             <div slot="footer">
                 <lightning-button
                     variant="brand"
-                    label="Refresh"
-                    title="Refresh"
+                    label={labels.analyzeButton}
+                    title={labels.analyzeButton}
                     disabled={isLoading}
-                    onclick={refreshSentiment}>
+                    onclick={analyzeSentiment}>
                 </lightning-button>
             </div>
         </template>

@@ -33,7 +33,9 @@ public class CustomerSentimentService {
     }
 
     private List<String> customerSentiments = new List<String>{
-        'Positive', 'Neutral', 'Negative'
+        System.Label.ConversationSentiment_Positive,
+        System.Label.ConversationSentiment_Neutral,
+        System.Label.ConversationSentiment_Negative
     };
 
     public class InvalidIdException extends Exception {}

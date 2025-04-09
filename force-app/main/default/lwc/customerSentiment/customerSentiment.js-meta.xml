@@ -11,10 +11,10 @@
             name="mode"
             type="String"
             label="Mode"
-            datasource="After Every Message,On Button Click,End of Conversation"
-            default="After Every Message"
-            placeholder="When the sentiment calculation will occur"
-            description="When the sentiment calculation will occur"/>
+            datasource="Real-time,Analyze Button,Conversation End"
+            default="Real-time"
+            placeholder="When the sentiment analysis will occur"
+            description="When the sentiment analysis will occur"/>
             <objects>
                 <object>MessagingSession</object>
             </objects>
