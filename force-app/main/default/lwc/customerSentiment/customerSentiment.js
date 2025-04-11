@@ -1,5 +1,5 @@
 import { LightningElement, api, wire } from 'lwc';
-import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import { getRecord } from 'lightning/uiRecordApi';
 import getCustomerSentiment from '@salesforce/apex/CustomerSentimentController.getCustomerSentiment';
 import { subscribe, MessageContext, APPLICATION_SCOPE } from 'lightning/messageService';
 import ConversationAgentSendChannel from '@salesforce/messageChannel/lightning__conversationAgentSend';
@@ -137,7 +137,6 @@ export default class CustomerSentiment extends LightningElement {
         .then(result => {
             this.customerSentiment = result;
             this.hasError = false;
-            console.log('Customer Sentiment:', this.customerSentiment);
         })
         .catch(error => {
             this.customerSentiment = '';
@@ -176,8 +175,19 @@ const SENTIMENTS = {
     }
 };
 
+const RECORD_FIELDS = [MESSAGING_SESSION_STATUS];
+
+/**
+ * Modes for triggering sentiment analysis in the component.
+ * - Real-time: Automatically each time a message is sent/received.
+ * - Analyze Button: When the user clicks an "Analyze" button.
+ * - Conversation End: When the Messaging Session ends.
+ * 
+ * 
+ * Note: if these values are updated, they must also be updated in the component's XML file,
+ * in the datasource of property "mode", as dynamic fetching in the XML file is not supported.
+*/
+
 const MODE_REAL_TIME = 'Real-time';
 const MODE_ANALYZE_BUTTON = 'Analyze Button';
 const MODE_CONV_END = 'Conversation End';
-
-const RECORD_FIELDS = [MESSAGING_SESSION_STATUS];
