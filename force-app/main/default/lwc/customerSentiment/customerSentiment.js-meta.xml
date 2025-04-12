@@ -16,6 +16,13 @@
             required="true"
             placeholder="When the sentiment analysis will occur"
             description="When the sentiment analysis will occur"/>
+
+            <property
+            name="includeExplanation"
+            type="Boolean"
+            label="Include Explanation"
+            default="true"
+            description="Whether or not to include a short text explaining why the sentiment was classified the way it was. Note: This makes processing longer as it means the AI will have further analysis to perform"/>
             <objects>
                 <object>MessagingSession</object>
             </objects>

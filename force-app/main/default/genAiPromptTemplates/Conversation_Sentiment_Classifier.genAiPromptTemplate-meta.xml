@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
     <activeVersionIdentifier>im/4dMJhgKSGYI9Jq26GZGKsgOzBNILpu8suqegT8dA=_1</activeVersionIdentifier>
-    <developerName>Conversation_Sentiment_Analyzer</developerName>
-    <masterLabel>Conversation Sentiment Analyzer</masterLabel>
+    <developerName>Conversation_Sentiment_Classifier</developerName>
+    <masterLabel>Conversation Sentiment Classifier</masterLabel>
     <templateVersions>
         <content>
             Your role is to analyze the following conversation transcript, between the following pair of double quotation marks:
@@ -11,28 +11,13 @@
             {!$Flow:conv_copilot_ms__GetTscpMsgSes.Prompt}
             &quot;
 
-            Now follow these instructions:
-
-            1. Identify the conversation&apos;s sentiment and strictly return one of the following classifications:
+            You must identify the conversation&apos;s sentiment and strictly return one of the following classifications:
 
             - Positive
             - Neutral
             - Negative
 
-            We&apos;re labeling this as &quot;classification&quot;.
-
-            2. Write a brief text explaining what led to the classification you got, something from 20 to 30 words. We&apos;re labeling this as &quot;explanation&quot;.
-            3. Translate the explanation to the following language: {!$User.LanguageLocaleKey}. We&apos;re labeling this as &quot;explanationLocale&quot;.
-
             The 10 latest messages have a &quot;Relevance Index&quot; of 3 while all previous messages have a &quot;Relevance Index&quot; of 1.
-
-            Your output must be structured according to the following JSON format:
-
-            {
-                &quot;classification&quot;: &quot;(classification goes here)&quot;,
-                &quot;explanation&quot;: &quot;(explanation goes here)&quot;,
-                &quot;explanationLocale&quot;: &quot;(translated explanation goes here)&quot; 
-            }
         </content>
         <inputs>
             <apiName>Messaging_Session</apiName>

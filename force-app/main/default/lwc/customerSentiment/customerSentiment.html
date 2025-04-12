@@ -15,16 +15,23 @@
                 <span lwc:if={isModeConvEnd}>{labels.convEndModeEmptyStateMessage}</span>
             </template>
             <template lwc:else>
-                <span class={sentimentClasses}>
-                    <lightning-icon
-                        icon-name={sentimentIcon}
-                        alternative-text={customerSentimentDisplay}
-                        size="xx-small"
-                        variant="inverse"
-                        class="slds-icon slds-icon_xx-small slds-m-right_xx-small">
-                    </lightning-icon>
-                    <span class="slds-badge__label">{customerSentimentDisplay}</span>
-                </span>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span class={sentimentClasses}>
+                            <lightning-icon
+                                icon-name={sentimentIcon}
+                                alternative-text={sentimentClassificationDisplay}
+                                size="xx-small"
+                                variant="inverse"
+                                class="slds-icon slds-icon_xx-small slds-m-right_xx-small">
+                            </lightning-icon>
+                            <span class="slds-badge__label">{sentimentClassificationDisplay}</span>
+                        </span>
+                    </div>
+                    <div class="slds-col" lwc:if={includeExplanation}>
+                        {sentimentAnalysis.explanationLocale}
+                    </div>
+                </div>
             </template>
         </div>
         <template lwc:if={isModeAnalyzeButton}>

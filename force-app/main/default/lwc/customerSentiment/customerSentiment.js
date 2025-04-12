@@ -1,10 +1,11 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
 import { getRecord } from 'lightning/uiRecordApi';
 import getCustomerSentiment from '@salesforce/apex/CustomerSentimentController.getCustomerSentiment';
 import { subscribe, MessageContext, APPLICATION_SCOPE } from 'lightning/messageService';
 import ConversationAgentSendChannel from '@salesforce/messageChannel/lightning__conversationAgentSend';
 import ConversationEndUserChannel from '@salesforce/messageChannel/lightning__conversationEndUserMessage';
 import ConversationEndedChannel from '@salesforce/messageChannel/lightning__conversationEnded';
+import SentimentAnalysis from './types/SentimentAnalysis';
 import MESSAGING_SESSION_STATUS from '@salesforce/schema/MessagingSession.Status';
 import CARD_TITLE_LABEL from '@salesforce/label/c.ConversationSentiment_Title';
 import POSITIVE_LABEL from '@salesforce/label/c.ConversationSentiment_Positive';
@@ -19,12 +20,14 @@ export default class CustomerSentiment extends LightningElement {
 
     @api recordId = '';
     @api mode = MODE_REAL_TIME;
+    @api includeExplanation = false;
     isLoading = false;
 
     @wire(MessageContext)
     messageContext;
 
-    messagingSession;
+    // Stores data from the MessagingSession record
+    messagingSession; 
 
     @wire(getRecord, { recordId: '$recordId', fields: RECORD_FIELDS })
     recordSetter({ error, data }) {
@@ -38,15 +41,21 @@ export default class CustomerSentiment extends LightningElement {
         }
     }
 
+    /** @type {SentimentAnalysis} */
+    @track
+    sentimentAnalysis = {
+        classification: '',
+        explanation: '',
+        explanationLocale: ''
+    };
+
     labels = {
         cardTitle: CARD_TITLE_LABEL,
         analyzeBtnEmptyStateMessage: ANALYZE_BUTTON_MODE_EMPTY_STATE_MESSAGE,
         convEndModeEmptyStateMessage: CONV_END_MODE_EMPTY_STATE_MESSAGE,
         friendlyErrorMessage: FRIENDLY_ERROR_MESSAGE,
-        analyzeButton: ANALYZE_BUTTON_LABEL,
-    }
-
-    customerSentiment = '';
+        analyzeButton: ANALYZE_BUTTON_LABEL
+    };
 
     initialize() {
         if (this.isSessionEnded || this.mode === MODE_REAL_TIME) {
@@ -62,18 +71,22 @@ export default class CustomerSentiment extends LightningElement {
         }
     }
 
+    get sentimentClassification() {
+        return this.sentimentAnalysis.classification;
+    }
+
+    get sentimentClassificationDisplay() {
+        return SENTIMENTS[this.sentimentClassification]?.label ?? '';
+    }
+
     get sentimentIcon() {
-        return SENTIMENTS[this.customerSentiment]?.icon ?? '';
+        return SENTIMENTS[this.sentimentClassification]?.icon ?? '';
     }
 
     get sentimentClasses() {
         let sentimentClasses = 'slds-badge slds-p-horizontal_small slds-align-middle ';
-        sentimentClasses += SENTIMENTS[this.customerSentiment]?.class ?? '';
+        sentimentClasses += SENTIMENTS[this.sentimentClassification]?.class ?? '';
         return sentimentClasses;
-    }
-
-    get customerSentimentDisplay() {
-        return SENTIMENTS[this.customerSentiment]?.label ?? '';
     }
 
     get isErrorState() {
@@ -82,7 +95,7 @@ export default class CustomerSentiment extends LightningElement {
 
     get isEmptyState() {
         return !this.isErrorState
-        && !this.customerSentiment
+        && !this.sentimentClassification
         && (this.mode === MODE_CONV_END || this.mode === MODE_ANALYZE_BUTTON);
     }
 
@@ -133,19 +146,28 @@ export default class CustomerSentiment extends LightningElement {
         this.beginLoading();
 
         const messagingSessionId = this.recordId;
-        getCustomerSentiment({ messagingSessionId })
+        const includeExplanation = this.includeExplanation;
+        getCustomerSentiment({ messagingSessionId, includeExplanation })
         .then(result => {
-            this.customerSentiment = result;
+            this.sentimentAnalysis = result;
             this.hasError = false;
         })
         .catch(error => {
-            this.customerSentiment = '';
+            this.resetSentimentAnalysis();
             this.hasError = true;
             console.error('Unable to fetch conversation sentiment. Details:', error);
         })
         .finally(() => {
             this.endLoading();
         });
+    }
+
+    resetSentimentAnalysis() {
+        this.sentimentAnalysis = {
+            classification: '',
+            explanation: '',
+            explanationLocale: ''
+        };
     }
 
     beginLoading() {
