@@ -7,12 +7,7 @@ public class CustomerSentimentController {
     ) {
         includeExplanation = includeExplanation ?? false;
 
-        Map<Boolean, CustomerSentimentService> sentimentServiceMap = new Map<Boolean, CustomerSentimentService>{
-            true => new CustomerSentimentAnalysisService(),
-            false => new CustomerSentimentClassificationService()
-        };
-
-        CustomerSentimentService sentimentService = sentimentServiceMap.get(includeExplanation);
-        return sentimentService.getCustomerSentiment(messagingSessionId);
+        CustomerSentimentService sentimentService = new CustomerSentimentService();
+        return sentimentService.getCustomerSentiment(messagingSessionId, includeExplanation);
     }
 }

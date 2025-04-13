@@ -18,6 +18,11 @@
             - Negative
 
             The 10 latest messages have a &quot;Relevance Index&quot; of 3 while all previous messages have a &quot;Relevance Index&quot; of 1.
+            The output must be structured according to the following JSON format:
+
+            {
+                &quot;classification&quot;: &quot;(classification goes here)&quot;
+            }
         </content>
         <inputs>
             <apiName>Messaging_Session</apiName>

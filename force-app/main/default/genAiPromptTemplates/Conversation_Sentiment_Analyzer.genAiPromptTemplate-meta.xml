@@ -25,13 +25,12 @@
             3. Translate the explanation to the following language: {!$User.LanguageLocaleKey}. We&apos;re labeling this as &quot;explanationLocale&quot;.
 
             The 10 latest messages have a &quot;Relevance Index&quot; of 3 while all previous messages have a &quot;Relevance Index&quot; of 1.
-
-            Your output must be structured according to the following JSON format:
+            The output must be structured according to the following JSON format:
 
             {
                 &quot;classification&quot;: &quot;(classification goes here)&quot;,
                 &quot;explanation&quot;: &quot;(explanation goes here)&quot;,
-                &quot;explanationLocale&quot;: &quot;(translated explanation goes here)&quot; 
+                &quot;explanationLocale&quot;: &quot;(translated explanation goes here)&quot;
             }
         </content>
         <inputs>
