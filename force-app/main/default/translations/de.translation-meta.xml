@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customLabels>
+        <label>Analysieren</label>
+        <name>ConversationSentiment_AnalyzeButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Sind Sie bereit, die Stimmung in diesem Gespräch zu analysieren?</label>
+        <name>ConversationSentiment_AnalyzeButtonModeEmptyStateMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Die Stimmung wird hier angezeigt, sobald das Gespräch beendet ist 💬</label>
+        <name>ConversationSentiment_ConvEndModeEmptyStateMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Wir konnten die Konversationsstimmung nicht analysieren. Bitte versuchen Sie es in Kürze erneut</label>
+        <name>ConversationSentiment_DefaultError</name>
+    </customLabels>
+    <customLabels>
+        <label>Negativ</label>
+        <name>ConversationSentiment_Negative</name>
+    </customLabels>
+    <customLabels>
+        <label>Neutral</label>
+        <name>ConversationSentiment_Neutral</name>
+    </customLabels>
+    <customLabels>
+        <label>Positiv</label>
+        <name>ConversationSentiment_Positive</name>
+    </customLabels>
+    <customLabels>
+        <label>Aktualisieren</label>
+        <name>ConversationSentiment_RefreshBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Gesprächsstimmung</label>
+        <name>ConversationSentiment_Title</name>
+    </customLabels>
+</Translations>

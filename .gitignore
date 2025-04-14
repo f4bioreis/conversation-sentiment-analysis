@@ -1,0 +1,7 @@
+/.sf
+/.sfdx
+/config
+/manifest
+/scratch-orgs
+.prettierignore
+.prettierrc

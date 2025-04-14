@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customLabels>
+        <label>Analyseren</label>
+        <name>ConversationSentiment_AnalyzeButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Bent u klaar om de mening van dit gesprek te analyseren?</label>
+        <name>ConversationSentiment_AnalyzeButtonModeEmptyStateMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Het sentiment zal hier verschijnen zodra het gesprek eindigt 💬</label>
+        <name>ConversationSentiment_ConvEndModeEmptyStateMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>We konden de conversatie-sentimenten niet analyseren. Probeer het later opnieuw</label>
+        <name>ConversationSentiment_DefaultError</name>
+    </customLabels>
+    <customLabels>
+        <label>Negatief</label>
+        <name>ConversationSentiment_Negative</name>
+    </customLabels>
+    <customLabels>
+        <label>Neutraal</label>
+        <name>ConversationSentiment_Neutral</name>
+    </customLabels>
+    <customLabels>
+        <label>Positief</label>
+        <name>ConversationSentiment_Positive</name>
+    </customLabels>
+    <customLabels>
+        <label>Vernieuwen</label>
+        <name>ConversationSentiment_RefreshBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Gesprekssentiment</label>
+        <name>ConversationSentiment_Title</name>
+    </customLabels>
+</Translations>

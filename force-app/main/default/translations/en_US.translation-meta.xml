@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customLabels>
+        <label><!-- Conversation Sentiment: Analyze Button Label --></label>
+        <name>ConversationSentiment_AnalyzeButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Empty state message for &quot;Analyze Button&quot; mode --></label>
+        <name>ConversationSentiment_AnalyzeButtonModeEmptyStateMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Empty state message for &quot;Conversation End&quot; mode --></label>
+        <name>ConversationSentiment_ConvEndModeEmptyStateMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Conversation Sentiment Default Error --></label>
+        <name>ConversationSentiment_DefaultError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Negative Conversation Sentiment --></label>
+        <name>ConversationSentiment_Negative</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Neutral Conversation Sentiment --></label>
+        <name>ConversationSentiment_Neutral</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Positive Conversation Sentiment --></label>
+        <name>ConversationSentiment_Positive</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Conversation Sentiment: Refresh Button Label --></label>
+        <name>ConversationSentiment_RefreshBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of the Customer Sentiment component --></label>
+        <name>ConversationSentiment_Title</name>
+    </customLabels>
+</Translations>
