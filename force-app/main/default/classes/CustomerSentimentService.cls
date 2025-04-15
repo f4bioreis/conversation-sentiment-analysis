@@ -1,4 +1,4 @@
-public class CustomerSentimentService {
+public class CustomerSentimentService implements ICustomerSentimentService {
 
     public ConversationSentimentDTO getCustomerSentiment(Id messagingSessionId, Boolean includeExplanation) {
         if (messagingSessionId.getSobjectType() != Schema.MessagingSession.SObjectType) {

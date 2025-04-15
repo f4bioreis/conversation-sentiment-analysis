@@ -1,4 +1,6 @@
 public class CustomerSentimentController {
+
+    public static ICustomerSentimentService service = new CustomerSentimentService();
     
     @AuraEnabled
     public static ConversationSentimentDTO getCustomerSentiment(
@@ -7,7 +9,6 @@ public class CustomerSentimentController {
     ) {
         includeExplanation = includeExplanation ?? false;
 
-        CustomerSentimentService sentimentService = new CustomerSentimentService();
-        return sentimentService.getCustomerSentiment(messagingSessionId, includeExplanation);
+        return service.getCustomerSentiment(messagingSessionId, includeExplanation);
     }
 }
