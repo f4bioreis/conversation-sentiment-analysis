@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Gesprekssentiment</label>
+    <name>ConversationSentiment__c</name>
+    <picklistValues>
+        <masterLabel>Negative</masterLabel>
+        <translation>Negatief</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Neutral</masterLabel>
+        <translation>Neutraal</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Positive</masterLabel>
+        <translation>Positief</translation>
+    </picklistValues>
+</CustomFieldTranslation>
