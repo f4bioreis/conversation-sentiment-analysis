@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
     <activeVersionIdentifier>im/4dMJhgKSGYI9Jq26GZGKsgOzBNILpu8suqegT8dA=_1</activeVersionIdentifier>
+    <description>This template analyzes and classifies a conversation&apos;s sentiment. The conversation is related to a Messaging Session record</description>
     <developerName>Conversation_Sentiment_Classifier</developerName>
     <masterLabel>Conversation Sentiment Classifier</masterLabel>
     <templateVersions>
@@ -11,14 +12,14 @@
             {!$Flow:conv_copilot_ms__GetTscpMsgSes.Prompt}
             &quot;
 
-            You must identify the conversation&apos;s sentiment and strictly return one of the following classifications:
+            You must identify the conversation&amp;apos;s sentiment and strictly return one of the following classifications:
 
             - Positive
             - Neutral
             - Negative
 
             The 10 latest messages have a &quot;Relevance Index&quot; of 3 while all previous messages have a &quot;Relevance Index&quot; of 1.
-            The output must be structured according to the following JSON format:
+            The output must be strictly structured according to the following JSON format, which is delimited by curling braces. Please do not include anything before or after the JSON.
 
             {
                 &quot;classification&quot;: &quot;(classification goes here)&quot;
@@ -31,7 +32,7 @@
             <referenceName>Input:Messaging_Session</referenceName>
             <required>true</required>
         </inputs>
-        <primaryModel>Conversation_Sentiment_Analyzer_CM_12l_MQlc4f91091</primaryModel>
+        <primaryModel>sfdc_ai__DefaultOpenAIGPT4Turbo</primaryModel>
         <status>Published</status>
         <templateDataProviders>
             <definition>flow://conv_copilot_ms__GetTscpMsgSes</definition>

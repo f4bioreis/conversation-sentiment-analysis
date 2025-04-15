@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ConvSentimentExplanationLocale__c</fullName>
+    <description>Explanation translation to the triggering user&apos;s locale</description>
+    <label>Sentiment Explanation (Locale)</label>
+    <length>500</length>
+    <trackHistory>false</trackHistory>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

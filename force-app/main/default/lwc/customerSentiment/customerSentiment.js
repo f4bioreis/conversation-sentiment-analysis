@@ -1,12 +1,16 @@
 import { LightningElement, api, track, wire } from 'lwc';
-import { getRecord } from 'lightning/uiRecordApi';
+import { getRecord, updateRecord, getFieldValue } from 'lightning/uiRecordApi';
 import getCustomerSentiment from '@salesforce/apex/CustomerSentimentController.getCustomerSentiment';
 import { subscribe, MessageContext, APPLICATION_SCOPE } from 'lightning/messageService';
 import ConversationAgentSendChannel from '@salesforce/messageChannel/lightning__conversationAgentSend';
 import ConversationEndUserChannel from '@salesforce/messageChannel/lightning__conversationEndUserMessage';
 import ConversationEndedChannel from '@salesforce/messageChannel/lightning__conversationEnded';
 import SentimentAnalysis from './types/SentimentAnalysis';
-import MESSAGING_SESSION_STATUS from '@salesforce/schema/MessagingSession.Status';
+import ID_FIELD from '@salesforce/schema/MessagingSession.Id';
+import STATUS_FIELD from '@salesforce/schema/MessagingSession.Status';
+import CONV_SENTIMENT_CLASSIF_FIELD from '@salesforce/schema/MessagingSession.ConversationSentiment__c';
+import CONV_SENTIMENT_EXPLANATION_FIELD from '@salesforce/schema/MessagingSession.ConversationSentimentExplanation__c';
+import CONV_SENTIMENT_EXPLANATION_LOCALE_FIELD from '@salesforce/schema/MessagingSession.ConvSentimentExplanationLocale__c';
 import CARD_TITLE_LABEL from '@salesforce/label/c.ConversationSentiment_Title';
 import POSITIVE_LABEL from '@salesforce/label/c.ConversationSentiment_Positive';
 import NEUTRAL_LABEL from '@salesforce/label/c.ConversationSentiment_Neutral';
@@ -22,6 +26,7 @@ export default class CustomerSentiment extends LightningElement {
     @api mode = MODE_REAL_TIME;
     @api includeExplanation = false;
     isLoading = false;
+    hasInitialized = false;
 
     @wire(MessageContext)
     messageContext;
@@ -30,11 +35,14 @@ export default class CustomerSentiment extends LightningElement {
     messagingSession; 
 
     @wire(getRecord, { recordId: '$recordId', fields: RECORD_FIELDS })
-    recordSetter({ error, data }) {
+    recordSetter({ data, error }) {        
         if (data) {
-            this.hasError = false;
             this.messagingSession = data;
-            this.initialize();
+            this.hasError = false;
+            if (!this.hasInitialized) {
+                this.initialize();
+                this.hasInitialized = true;
+            }
         } else if (error) {
             this.hasError = true;
             console.error('An error has occurred when fetching the MessagingSession record:', error);
@@ -57,18 +65,28 @@ export default class CustomerSentiment extends LightningElement {
         analyzeButton: ANALYZE_BUTTON_LABEL
     };
 
-    initialize() {
-        if (this.isSessionEnded || this.mode === MODE_REAL_TIME) {
-            this.fetchCustomerSentiment();
+    async initialize() {
+        if (this.isSessionEnded) {
+            const classification = getFieldValue(this.messagingSession, CONV_SENTIMENT_CLASSIF_FIELD);
+            const explanation = getFieldValue(this.messagingSession, CONV_SENTIMENT_EXPLANATION_FIELD);
+            const explanationLocale = getFieldValue(this.messagingSession, CONV_SENTIMENT_EXPLANATION_LOCALE_FIELD);
+
+            if (!classification) {
+                await this.fetchCustomerSentiment();
+            }
+            else {
+                this.sentimentAnalysis.classification = classification;
+                this.sentimentAnalysis.explanation = explanation;
+                this.sentimentAnalysis.explanationLocale = explanationLocale;
+            }
         }
         
         if (this.mode === MODE_REAL_TIME) {
             this.subscribeToAgentMessageChannel();
             this.subscribeToEndUserMessageChannel();
         }
-        else if (this.mode === MODE_CONV_END) {
-            this.subscribeToConversationEndChannel();
-        }
+        
+        this.subscribeToConversationEndChannel();
     }
 
     get sentimentClassification() {
@@ -108,7 +126,7 @@ export default class CustomerSentiment extends LightningElement {
     }
 
     get isSessionEnded() {
-        return this.messagingSession.fields.Status.value === 'Ended';
+        return getFieldValue(this.messagingSession, STATUS_FIELD) === 'Ended';
     }
 
     subscribeToAgentMessageChannel() {
@@ -133,33 +151,50 @@ export default class CustomerSentiment extends LightningElement {
         subscribe(
             this.messageContext,
             ConversationEndedChannel,
-            () => this.analyzeSentiment(),
+            () => this.handleConversationEnd(),
             { scope: APPLICATION_SCOPE }
         );
     }
 
-    analyzeSentiment() {
-        this.fetchCustomerSentiment();
+    async handleConversationEnd() {
+
+        try {
+            await this.fetchCustomerSentiment();
+
+            const fields = {};
+            fields[ID_FIELD.fieldApiName] = this.recordId;
+            fields[CONV_SENTIMENT_CLASSIF_FIELD.fieldApiName] = this.sentimentClassification;
+            fields[CONV_SENTIMENT_EXPLANATION_FIELD.fieldApiName] = this.sentimentAnalysis.explanation;
+
+            await updateRecord({ fields });
+        }
+        catch (error) {
+            console.error('An error has occurred when updating the MessagingSession record:', error);
+        }
+
     }
 
-    fetchCustomerSentiment() {
+    async analyzeSentiment() {
+        await this.fetchCustomerSentiment();
+    }
+
+    async fetchCustomerSentiment() {
         this.beginLoading();
 
         const messagingSessionId = this.recordId;
         const includeExplanation = this.includeExplanation;
-        getCustomerSentiment({ messagingSessionId, includeExplanation })
-        .then(result => {
-            this.sentimentAnalysis = result;
+        try {
+            this.sentimentAnalysis = await getCustomerSentiment({ messagingSessionId, includeExplanation });
             this.hasError = false;
-        })
-        .catch(error => {
+        }
+        catch (error) {
             this.resetSentimentAnalysis();
             this.hasError = true;
             console.error('Unable to fetch conversation sentiment. Details:', error);
-        })
-        .finally(() => {
+        }
+        finally {
             this.endLoading();
-        });
+        }
     }
 
     resetSentimentAnalysis() {
@@ -197,7 +232,13 @@ const SENTIMENTS = {
     }
 };
 
-const RECORD_FIELDS = [MESSAGING_SESSION_STATUS];
+const RECORD_FIELDS = [
+    ID_FIELD,
+    STATUS_FIELD,
+    CONV_SENTIMENT_CLASSIF_FIELD,
+    CONV_SENTIMENT_EXPLANATION_FIELD,
+    CONV_SENTIMENT_EXPLANATION_LOCALE_FIELD
+];
 
 /**
  * Modes for triggering sentiment analysis in the component.

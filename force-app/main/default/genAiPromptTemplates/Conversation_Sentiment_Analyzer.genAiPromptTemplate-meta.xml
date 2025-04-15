@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
     <activeVersionIdentifier>im/4dMJhgKSGYI9Jq26GZGKsgOzBNILpu8suqegT8dA=_1</activeVersionIdentifier>
+    <description>This template returns a conversation&apos;s sentiment analysis, featuring a classification and an explanation. The conversation is related to a Messaging Session record</description>
     <developerName>Conversation_Sentiment_Analyzer</developerName>
     <masterLabel>Conversation Sentiment Analyzer</masterLabel>
     <templateVersions>
@@ -22,16 +23,21 @@
             We&apos;re labeling this as &quot;classification&quot;.
 
             2. Write a brief text explaining what led to the classification you got, something from 20 to 30 words. We&apos;re labeling this as &quot;explanation&quot;.
-            3. Translate the explanation to the following language: {!$User.LanguageLocaleKey}. We&apos;re labeling this as &quot;explanationLocale&quot;.
+            3. Translate the explanation to the following language: {!$User.LanguageLocaleCode__c}. We&apos;re labeling this as &quot;explanationLocale&quot;.
 
             The 10 latest messages have a &quot;Relevance Index&quot; of 3 while all previous messages have a &quot;Relevance Index&quot; of 1.
-            The output must be structured according to the following JSON format:
+            The output must be strictly structured according to the following JSON format, which is delimited by curling braces.
 
             {
                 &quot;classification&quot;: &quot;(classification goes here)&quot;,
                 &quot;explanation&quot;: &quot;(explanation goes here)&quot;,
                 &quot;explanationLocale&quot;: &quot;(translated explanation goes here)&quot;
             }
+
+            More important considerations:
+
+            - Do not include anything before or after the JSON.
+            - If you need to use single quotes inside the JSON, make sure to escape them with a backslash character.
         </content>
         <inputs>
             <apiName>Messaging_Session</apiName>
@@ -40,7 +46,7 @@
             <referenceName>Input:Messaging_Session</referenceName>
             <required>true</required>
         </inputs>
-        <primaryModel>Conversation_Sentiment_Analyzer_CM_12l_MQlc4f91091</primaryModel>
+        <primaryModel>sfdc_ai__DefaultOpenAIGPT4Turbo</primaryModel>
         <status>Published</status>
         <templateDataProviders>
             <definition>flow://conv_copilot_ms__GetTscpMsgSes</definition>
