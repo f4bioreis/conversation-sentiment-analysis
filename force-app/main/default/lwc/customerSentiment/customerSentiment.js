@@ -2,7 +2,6 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { getRecord, updateRecord, getFieldValue } from 'lightning/uiRecordApi';
 import getCustomerSentiment from '@salesforce/apex/CustomerSentimentController.getCustomerSentiment';
 import { subscribe, MessageContext, APPLICATION_SCOPE } from 'lightning/messageService';
-import ConversationAgentSendChannel from '@salesforce/messageChannel/lightning__conversationAgentSend';
 import ConversationEndUserChannel from '@salesforce/messageChannel/lightning__conversationEndUserMessage';
 import ConversationEndedChannel from '@salesforce/messageChannel/lightning__conversationEnded';
 import SentimentAnalysis from './types/SentimentAnalysis';
@@ -71,18 +70,29 @@ export default class CustomerSentiment extends LightningElement {
             const explanation = getFieldValue(this.messagingSession, CONV_SENTIMENT_EXPLANATION_FIELD);
             const explanationLocale = getFieldValue(this.messagingSession, CONV_SENTIMENT_EXPLANATION_LOCALE_FIELD);
 
+            console.log('Classification:', classification);
+            console.log('Explanation:', explanation);
+            console.log('Explanation Locale:', explanationLocale);
+            
+            
             if (!classification) {
+                console.log('No classification found. Fetching customer sentiment...');
                 await this.fetchCustomerSentiment();
             }
             else {
+                console.log('Classification found. Setting sentiment analysis...');
                 this.sentimentAnalysis.classification = classification;
                 this.sentimentAnalysis.explanation = explanation;
                 this.sentimentAnalysis.explanationLocale = explanationLocale;
+
+                console.log('Sentiment analysis:', this.sentimentAnalysis);
             }
+        }
+        else if (this.mode === MODE_REAL_TIME) {
+            await this.fetchCustomerSentiment();
         }
         
         if (this.mode === MODE_REAL_TIME) {
-            this.subscribeToAgentMessageChannel();
             this.subscribeToEndUserMessageChannel();
         }
         
@@ -129,15 +139,6 @@ export default class CustomerSentiment extends LightningElement {
         return getFieldValue(this.messagingSession, STATUS_FIELD) === 'Ended';
     }
 
-    subscribeToAgentMessageChannel() {
-        subscribe(
-            this.messageContext,
-            ConversationAgentSendChannel,
-            () => this.analyzeSentiment(),
-            { scope: APPLICATION_SCOPE }
-        );
-    }
-
     subscribeToEndUserMessageChannel() {
         subscribe(
             this.messageContext,
@@ -159,12 +160,15 @@ export default class CustomerSentiment extends LightningElement {
     async handleConversationEnd() {
 
         try {
-            await this.fetchCustomerSentiment();
+            if (this.mode !== MODE_REAL_TIME) {
+                await this.fetchCustomerSentiment();
+            }
 
             const fields = {};
             fields[ID_FIELD.fieldApiName] = this.recordId;
             fields[CONV_SENTIMENT_CLASSIF_FIELD.fieldApiName] = this.sentimentClassification;
             fields[CONV_SENTIMENT_EXPLANATION_FIELD.fieldApiName] = this.sentimentAnalysis.explanation;
+            fields[CONV_SENTIMENT_EXPLANATION_LOCALE_FIELD.fieldApiName] = this.sentimentAnalysis.explanationLocale;
 
             await updateRecord({ fields });
         }

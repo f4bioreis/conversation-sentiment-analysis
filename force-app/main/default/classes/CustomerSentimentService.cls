@@ -24,8 +24,7 @@ public class CustomerSentimentService implements ICustomerSentimentService {
 
         ConnectApi.EinsteinPromptTemplateGenerationsRepresentation templateResponse =
             ConnectApi.EinsteinLLM.generateMessagesForPromptTemplate(
-                'Conversation_Sentiment_Analyzer',
-                templateInput
+                templateName, templateInput
             );
         
         String sentimentAnalysisJSON = templateResponse.generations[0].text.trim();
@@ -39,7 +38,7 @@ public class CustomerSentimentService implements ICustomerSentimentService {
             System.debug(System.LoggingLevel.ERROR, 'JSON received: ' + sentimentAnalysisJSON);
             throw new UnexpectedAnalysisStructureException('The structure of the sentiment analysis response is unexpected');
         }
-        
+
 
         if (!customerSentiments.contains(sentimentAnalysis.classification)) {
             throw new UnexpectedSentimentException('The sentiment returned is unexpected: ' + sentimentAnalysis.classification);
@@ -49,9 +48,9 @@ public class CustomerSentimentService implements ICustomerSentimentService {
     }
 
     private List<String> customerSentiments = new List<String>{
-        System.Label.ConversationSentiment_Positive,
-        System.Label.ConversationSentiment_Neutral,
-        System.Label.ConversationSentiment_Negative
+        System.Label.get('', 'ConversationSentiment_Positive', 'en_US'),
+        System.Label.get('', 'ConversationSentiment_Neutral', 'en_US'),
+        System.Label.get('', 'ConversationSentiment_Negative', 'en_US')
     };
     
     public class InvalidIdException extends Exception {}
