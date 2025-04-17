@@ -71,24 +71,15 @@ export default class CustomerSentiment extends LightningElement {
         if (this.isSessionEnded) {
             const classification = getFieldValue(this.messagingSession, SENTIMENT_CLASSIF_FIELD);
             const explanation = getFieldValue(this.messagingSession, SENTIMENT_EXPLANATION_FIELD);
-            const explanationLocale = getFieldValue(this.messagingSession, SENTIMENT_EXPLANATION_LOCALE_FIELD);
-
-            console.log('Classification:', classification);
-            console.log('Explanation:', explanation);
-            console.log('Explanation Locale:', explanationLocale);
-            
+            const explanationLocale = getFieldValue(this.messagingSession, SENTIMENT_EXPLANATION_LOCALE_FIELD);            
             
             if (!classification) {
-                console.log('No classification found. Fetching customer sentiment...');
                 await this.fetchCustomerSentiment();
             }
             else {
-                console.log('Classification found. Setting sentiment analysis...');
                 this.sentimentAnalysis.classification = classification;
                 this.sentimentAnalysis.explanation = explanation;
                 this.sentimentAnalysis.explanationLocale = explanationLocale;
-
-                console.log('Sentiment analysis:', this.sentimentAnalysis);
             }
         }
         else if (this.mode === MODE_REAL_TIME) {
