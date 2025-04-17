@@ -1,5 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getRecord, updateRecord, getFieldValue } from 'lightning/uiRecordApi';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getCustomerSentiment from '@salesforce/apex/CustomerSentimentController.getCustomerSentiment';
 import { subscribe, MessageContext, APPLICATION_SCOPE } from 'lightning/messageService';
 import ConversationEndUserChannel from '@salesforce/messageChannel/lightning__conversationEndUserMessage';
@@ -26,6 +27,7 @@ export default class CustomerSentiment extends LightningElement {
     @api includeExplanation = false;
     isLoading = false;
     hasInitialized = false;
+    hasError = false;
 
     @wire(MessageContext)
     messageContext;
@@ -174,6 +176,10 @@ export default class CustomerSentiment extends LightningElement {
         }
         catch (error) {
             console.error('An error has occurred when updating the MessagingSession record:', error);
+            this.dispatchEvent(new ShowToastEvent({
+                variant: 'warning',
+                message: 'The sentiment information could not be saved'
+            }));
         }
 
     }
