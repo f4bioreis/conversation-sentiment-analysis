@@ -5,3 +5,10 @@
 /scratch-orgs
 .prettierignore
 .prettierrc
+/force-app/main/default/applications
+/force-app/main/default/contentassets
+/force-app/main/default/flexipages
+/force-app/main/default/layouts
+/force-app/main/default/staticresources
+/force-app/main/default/tabs
+/force-app/main/default/triggers

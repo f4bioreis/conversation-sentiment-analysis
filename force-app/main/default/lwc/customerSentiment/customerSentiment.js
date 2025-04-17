@@ -8,9 +8,10 @@ import ConversationEndedChannel from '@salesforce/messageChannel/lightning__conv
 import SentimentAnalysis from './types/SentimentAnalysis';
 import ID_FIELD from '@salesforce/schema/MessagingSession.Id';
 import STATUS_FIELD from '@salesforce/schema/MessagingSession.Status';
-import CONV_SENTIMENT_CLASSIF_FIELD from '@salesforce/schema/MessagingSession.ConversationSentiment__c';
-import CONV_SENTIMENT_EXPLANATION_FIELD from '@salesforce/schema/MessagingSession.ConversationSentimentExplanation__c';
-import CONV_SENTIMENT_EXPLANATION_LOCALE_FIELD from '@salesforce/schema/MessagingSession.ConvSentimentExplanationLocale__c';
+import SENTIMENT_CLASSIF_FIELD from '@salesforce/schema/MessagingSession.Sentiment__c';
+import SENTIMENT_EXPLANATION_FIELD from '@salesforce/schema/MessagingSession.SentimentExplanation__c';
+import SENTIMENT_EXPLANATION_LOCALE_FIELD from '@salesforce/schema/MessagingSession.SentimentExplanationLocale__c';
+import SENTIMENT_ANALYSIS_DATE_FIELD from '@salesforce/schema/MessagingSession.SentimentAnalysisDate__c';
 import CARD_TITLE_LABEL from '@salesforce/label/c.ConversationSentiment_Title';
 import POSITIVE_LABEL from '@salesforce/label/c.ConversationSentiment_Positive';
 import NEUTRAL_LABEL from '@salesforce/label/c.ConversationSentiment_Neutral';
@@ -68,9 +69,9 @@ export default class CustomerSentiment extends LightningElement {
 
     async initialize() {
         if (this.isSessionEnded) {
-            const classification = getFieldValue(this.messagingSession, CONV_SENTIMENT_CLASSIF_FIELD);
-            const explanation = getFieldValue(this.messagingSession, CONV_SENTIMENT_EXPLANATION_FIELD);
-            const explanationLocale = getFieldValue(this.messagingSession, CONV_SENTIMENT_EXPLANATION_LOCALE_FIELD);
+            const classification = getFieldValue(this.messagingSession, SENTIMENT_CLASSIF_FIELD);
+            const explanation = getFieldValue(this.messagingSession, SENTIMENT_EXPLANATION_FIELD);
+            const explanationLocale = getFieldValue(this.messagingSession, SENTIMENT_EXPLANATION_LOCALE_FIELD);
 
             console.log('Classification:', classification);
             console.log('Explanation:', explanation);
@@ -161,16 +162,19 @@ export default class CustomerSentiment extends LightningElement {
 
     async handleConversationEnd() {
 
-        try {
-            if (this.mode !== MODE_REAL_TIME) {
-                await this.fetchCustomerSentiment();
-            }
+        if (this.mode !== MODE_REAL_TIME) {
+            await this.fetchCustomerSentiment();
+        }
 
+        if (!this.sentimentClassification) return;
+
+        try {
             const fields = {};
             fields[ID_FIELD.fieldApiName] = this.recordId;
-            fields[CONV_SENTIMENT_CLASSIF_FIELD.fieldApiName] = this.sentimentClassification;
-            fields[CONV_SENTIMENT_EXPLANATION_FIELD.fieldApiName] = this.sentimentAnalysis.explanation;
-            fields[CONV_SENTIMENT_EXPLANATION_LOCALE_FIELD.fieldApiName] = this.sentimentAnalysis.explanationLocale;
+            fields[SENTIMENT_CLASSIF_FIELD.fieldApiName] = this.sentimentClassification;
+            fields[SENTIMENT_EXPLANATION_FIELD.fieldApiName] = this.sentimentAnalysis.explanation;
+            fields[SENTIMENT_EXPLANATION_LOCALE_FIELD.fieldApiName] = this.sentimentAnalysis.explanationLocale;
+            fields[SENTIMENT_ANALYSIS_DATE_FIELD.fieldApiName] = new Date().toISOString();
 
             await updateRecord({ fields });
         }
@@ -181,7 +185,6 @@ export default class CustomerSentiment extends LightningElement {
                 message: 'The sentiment information could not be saved'
             }));
         }
-
     }
 
     async analyzeSentiment() {
@@ -245,9 +248,9 @@ const SENTIMENTS = {
 const RECORD_FIELDS = [
     ID_FIELD,
     STATUS_FIELD,
-    CONV_SENTIMENT_CLASSIF_FIELD,
-    CONV_SENTIMENT_EXPLANATION_FIELD,
-    CONV_SENTIMENT_EXPLANATION_LOCALE_FIELD
+    SENTIMENT_CLASSIF_FIELD,
+    SENTIMENT_EXPLANATION_FIELD,
+    SENTIMENT_EXPLANATION_LOCALE_FIELD
 ];
 
 /**

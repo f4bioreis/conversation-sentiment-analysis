@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>Explicación del Sentimiento</label>
-    <name>ConversationSentimentExplanation__c</name>
+    <label>Data da Análise de Sentimento</label>
+    <name>SentimentAnalysisDate__c</name>
 </CustomFieldTranslation>
