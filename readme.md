@@ -2,6 +2,10 @@
 
 This repository contains a Salesforce Lightning Web Component (LWC), supporting Apex classes, Prompt Templates and other metadata designed to analyze and classify the **sentiment** of a conversation from a `Messaging Session` record.
 
+## 🎬 Demo Video
+
+[![Watch the video](https://i9.ytimg.com/vi/36AtaGBDOVQ/hqdefault.jpg?v=6805f904&sqp=CID2l8AG&rs=AOn4CLBRJopEhb_2Gv9F96cAKdoEYBkf8Q)](https://www.youtube.com/watch?v=36AtaGBDOVQ)
+
 ## 🔍 Features
 
 - **Sentiment Analysis** powered by OpenAI's **GPT-4 Turbo** via a tuned Prompt Template for optimal classification accuracy.
