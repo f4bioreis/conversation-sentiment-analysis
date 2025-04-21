@@ -4,11 +4,11 @@ This repository contains a Salesforce Lightning Web Component (LWC), supporting 
 
 ## 🎬 Demo Video
 
-[![Watch the video](https://i9.ytimg.com/vi/36AtaGBDOVQ/hqdefault.jpg?v=6805f904&sqp=CID2l8AG&rs=AOn4CLBRJopEhb_2Gv9F96cAKdoEYBkf8Q)](https://www.youtube.com/watch?v=36AtaGBDOVQ)
+[![Watch the video](https://img.youtube.com/vi/36AtaGBDOVQ/hqdefault.jpg)](https://www.youtube.com/watch?v=36AtaGBDOVQ)
 
 ## 🔍 Features
 
-- **Sentiment Analysis** powered by OpenAI's **GPT-4 Turbo** via a tuned Prompt Template for optimal classification accuracy.
+- **Sentiment Analysis** powered by OpenAI's **GPT-4 Turbo** via a tuned Prompt Template for optimal classification.
   
 - **Analysis Display** showing:
   - An icon representing the sentiment (positive, neutral, or negative)
@@ -40,6 +40,8 @@ When the conversation ends, the sentiment analysis information is saved to the M
 ⚙️ -> Setup -> Einstein Setup -> Turn on Einstein
 
 - Prompt Templates
+
+With this out of the way, let's get to the instructions:
 
 1. Clone this repository to your machine:
 
